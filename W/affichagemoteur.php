@@ -11,12 +11,26 @@
             // On se connecte à MySQL
             $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
             $bdd = new PDO('mysql:host=localhost;dbname=app2', 'root', '',$pdo_options);
-            
-            // On récupère tout le contenu de la table jeux_video
-            $reponse = $bdd->query('SELECT * FROM restaurant r, utilisateur u, type t WHERE r.proprietaire = u.id AND r.id_type = t.id_type  ');
+            ?> replace <?php
+            if ($_POST['note']!= "null"){$note = $_POST['note'];}
+            if ($_POST['cd']!= "null"){$cd = $_POST['cd'];}
+            if ($_POST['pays']!= "null"){$pays = $_POST['pays'];}
+            if ($_POST['type']!= "null"){$type = $_POST['type'];}
+            if ($_POST['prix']!= "null"){$prix = $_POST['prix'];}
+            /*if ($_POST['barrerech']!= "null"){ 
+                $nom
+                $ville
+                $adresse
+               }*/
+            // On récupère tout le contenu de la bdd
+            $reponse = $bdd->query('SELECT * FROM restaurant r, utilisateur u, type t, cd, pays p   
+                WHERE t.nom_type = \''.$type.'\' AND r.id_type = t.id_type 
+                    AND r.note = \''.$note.'\' AND r.prix >= \''.$prix.'\'
+                        AND p.nom_pays = \''.$pays.'\' AND r.id_pays = p/id_pays ');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()) {
-                ?>
+                echo $donnees['id_resto'];
+                /*?>
                 <p>
                     <strong>Restaurant</strong> : <?php echo $donnees['nom_resto']; ?><br />
                     Le possesseur de ce restaurant est : <?php echo
@@ -28,7 +42,7 @@
                     commentaires sur le restaurant <?php echo $donnees['nom_resto']; ?> : <em><?php echo
         $donnees['caracteristiques']; ?></em>
                 </p>
-                        <?php
+                        <?php*/
                     }
                     $reponse->closeCursor(); // Termine le traitement de la requête
                 } catch (Exception $e) {
