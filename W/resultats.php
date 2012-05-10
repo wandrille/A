@@ -11,25 +11,27 @@
             // On se connecte à MySQL
             $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
             $bdd = new PDO('mysql:host=localhost;dbname=app2', 'root', '',$pdo_options);
-            ?> replace <?php
-            if ($_POST['note']!= "null"){$note = $_POST['note'];}
-            if ($_POST['cd']!= "null"){$cd = $_POST['cd'];}
-            if ($_POST['pays']!= "null"){$pays = $_POST['pays'];}
-            if ($_POST['type']!= "null"){$type = $_POST['type'];}
-            if ($_POST['prix']!= "null"){$prix = $_POST['prix'];}
+            ?> procedure commencee <br/> <?php
+            if (isset($_GET['note'])){$note = $_GET['note'];}
+            if (isset($_GET['cd'])){$cd = $_GET['cd'];}
+            if (isset($_GET['pays'])){$pays = $_GET['pays'];}
+            if (isset($_GET['type'])){$type = $_GET['type'];}
+            if (isset($_GET['prix'])){$prix = $_GET['prix'];}
             /*if ($_POST['barrerech']!= "null"){ 
                 $nom
                 $ville
                 $adresse
                }*/
             // On récupère tout le contenu de la bdd
-            $reponse = $bdd->query('SELECT * FROM restaurant r, utilisateur u, type t, cd, pays p   
+            $reponse = $bdd->query('SELECT id_resto,nom_resto FROM restaurant r, type t, cd, pays p   
                 WHERE t.nom_type = \''.$type.'\' AND r.id_type = t.id_type 
-                    AND r.note = \''.$note.'\' AND r.prix >= \''.$prix.'\'
-                        AND p.nom_pays = \''.$pays.'\' AND r.id_pays = p/id_pays ');
+                    AND r.note >= \''.$note.'\' AND r.prix_moyen >= \''.$prix.'\'
+                        AND p.nom_pays = \''.$pays.'\' AND r.id_pays = p.id_pays 
+                            AND cd.nom_cd =  \''.$cd.'\' AND r.id_cd = cd.id_cd');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()) {
                 echo $donnees['id_resto'];
+                echo $donnees['nom_resto'];
                 /*?>
                 <p>
                     <strong>Restaurant</strong> : <?php echo $donnees['nom_resto']; ?><br />
@@ -50,6 +52,8 @@
                     die('Erreur : ' . $e->getMessage());
                 }
                 ?>
+            <br/>
+            procedure terminee
     </body>
 </html>
 
